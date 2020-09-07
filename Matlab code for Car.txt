@@ -1,0 +1,105 @@
+brick.SetColorMode(1,2);
+global key
+while 1
+    brightness = brick.ColorCode(1); 
+    disp(brightness);  
+    if brightness==1 
+        disp('BLACK');
+        brick.MoveMotor('A',-20);
+        brick.MoveMotor('B',-20);
+    end
+    
+    if brightness==6
+        disp('WHITE');
+        brick.StopMotor('A');
+        brick.StopMotor('B');
+       while brightness==6
+        brick.MoveMotorAngleRel('A', -20, 90, 'Brake');
+        brick.WaitForMotor('A');
+        brightness=brick.ColorCode(1);
+        if brightness==1
+            break;
+        else
+            brick.MoveMotorAngleRel('B', -20, 180, 'Brake');
+            brick.WaitForMotor('B');
+            brightness=brick.ColorCode(1); 
+        end
+      end
+      brick.MoveMotor('AB',-20);
+    end
+
+   
+    if brightness==5
+        disp('RED');
+        brick.StopMotor('AB');
+        pause(5);
+        brick.MoveMotor('A',-20);
+        brick.MoveMotor('B',-20);
+        pause(2);
+      
+    end
+    
+    if brightness==4||brightness==3
+        disp('YELLOW OR GREEN');
+        brick.StopMotor('AB');
+        InitKeyboard();
+        while  1
+            pause(0.1);
+            switch key
+                 case 'uparrow'
+                    brick.MoveMotor('A',-20)
+                    brick.MoveMotor('B',-20)
+                    disp('Up Arrow pressed');
+
+                case 'downarrow'
+                    brick.MoveMotor('A',20);
+                    brick.MoveMotor('B',20);
+                    disp('Down Arrow pressed');
+            
+                case 'leftarrow'
+                    brick.MoveMotor('B',20)
+                    brick.MoveMotor('A',-20);
+                    disp('Left Arrow pressed');
+
+                case 'rightarrow'   
+                    brick.MoveMotor('A',20);
+                    brick.MoveMotor('B',-20);
+                    disp('Right Arrow pressed');
+            
+                 case 's'
+                    brick.MoveMotor('C',10)
+                    disp('Up Arrow pressed');
+            
+                case 'w'
+                    brick.MoveMotor('C',-10);
+                    disp('Down Arrow pressed');
+                    
+                case 0
+                    brick.StopMotor('C');
+                    brick.StopMotor('A');
+                    brick.StopMotor('B');
+                    
+                case 'q'
+                    brick.MoveMotor('AB',-10);
+                    break;
+            end
+        end
+        CloseKeyboard();
+    end
+    touch = brick.TouchPressed(2);
+    if touch==1
+        brick.StopMotor('AB');
+        pause(1);
+        brick.MoveMotor('A',20);
+        brick.MoveMotor('B',20);
+        pause(5);
+        brick.StopMotor('AB');
+        pause(2);
+        brick.MoveMotorAngleRel('A', 20, 520, 'Brake');
+         brick.MoveMotorAngleRel('B', -20, 520, 'Brake');
+         brick.WaitForMotor('A');
+         brick.WaitForMotor('B');
+    end
+    
+
+end
